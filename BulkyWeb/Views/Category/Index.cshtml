@@ -1,5 +1,12 @@
 ﻿@model List<Category>
 
+@* <partial name="_Notification" />   eta _layout nam a je master page ase oikhne dile sob page er jnno hobe *@
+
+@if(TempData["success"]!=null)
+{
+    <h2>@TempData["success"]</h2>
+}
+
 <div class="container"> 
 
     <div class="row pt-4 pb-3" >
@@ -26,7 +33,7 @@
                 <th>
                     Display Order
                 </th>
-
+                <th> </th>
             </tr>
         </thead>
         <tbody>
@@ -38,6 +45,16 @@
                     </td>
                     <td>
                         @item.DisplayOrder
+                    </td>
+                    <td>
+                         <div class="w-75 btn-group" role="group">
+                            <a asp-controller="Category" asp-action="Edit" asp-route-id="@item.Id" class="btn btn-primary mx-2">
+                                <i class="bi bi-pencil-square"></i> Edit
+                            </a>
+                            <a asp-controller="Category" asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger mx-2">
+                                <i class="bi bi-trash-fill"></i> Delete
+                            </a>
+                         </div>
                     </td>
                 </tr>
             }
