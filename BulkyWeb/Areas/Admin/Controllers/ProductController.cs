@@ -4,6 +4,7 @@ using Bulky.Models;
 using Bulky.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore.Storage;
 using System.Collections.Generic;
 
 namespace BulkyWeb.Areas.Admin.Controllers
@@ -155,6 +156,18 @@ namespace BulkyWeb.Areas.Admin.Controllers
             TempData["success"] = "Product deleted successfully";
             return RedirectToAction("Index");
         }
+
+
+        /* Database theke api call er maddhome data niye json a convert krchi then ei json data k javascript a maddhome datatable akare show krchi*/
+        #region API CALLS   
+        [HttpGet]        
+        public IActionResult GetAll()
+        {
+            List<Product> objProductList = _unitOfWork.Product.GetAll(includeProperties: "Category").ToList();
+            return Json(new { data = objProductList });
+        }
+
+        #endregion
 
     }
 }
