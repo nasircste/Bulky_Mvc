@@ -128,7 +128,7 @@ namespace BulkyWeb.Areas.Admin.Controllers
         }
 
 */
-        public IActionResult Delete(int? id)
+       /* public IActionResult Delete(int? id)
         {
             if (id == null || id == 0)
             {
@@ -154,11 +154,12 @@ namespace BulkyWeb.Areas.Admin.Controllers
             _unitOfWork.Product.Remove(obj);
             _unitOfWork.Save();
             TempData["success"] = "Product deleted successfully";
-            return RedirectToAction("Index");
-        }
+             return RedirectToAction("Index");
+        }*/
 
 
         /* Database theke api call er maddhome data niye json a convert krchi then ei json data k javascript a maddhome datatable akare show krchi*/
+
         #region API CALLS   
         [HttpGet]        
         public IActionResult GetAll()
@@ -167,6 +168,30 @@ namespace BulkyWeb.Areas.Admin.Controllers
             return Json(new { data = objProductList });
         }
 
+        [HttpDelete]
+        public IActionResult Delete(int? id)
+        {
+            var productToBeDeleted = _unitOfWork.Product.Get(u => u.Id == id);
+            if(productToBeDeleted==null)
+            {
+                return Json(new { success = false, message = "Error while deleting" });
+            }
+
+            var oldImagePath = 
+                Path.Combine(_webHostEnvironment.WebRootPath, 
+                productToBeDeleted.ImageUrl.TrimStart('\\'));
+
+            if (System.IO.File.Exists(oldImagePath))
+            {
+                System.IO.File.Delete(oldImagePath);
+            }
+
+            _unitOfWork.Product.Remove(productToBeDeleted);
+            _unitOfWork.Save();
+
+
+            return Json(new { success = true, message = "Delete Successful" });
+        }
         #endregion
 
     }
